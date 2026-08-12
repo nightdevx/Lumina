@@ -12,8 +12,11 @@ preview/
 # Runtime
 *.log
 
-# Legacy binaries kept on disk for reference, not in history (38 MB + NirSoft)
+# Kept on disk for reference, not published: the 37 MB v1 build, and NirSoft's
+# files, which belong to NirSoft rather than this project.
 legacy/LUMINA.exe
 legacy/ControlMyMonitor.exe
 legacy/ControlMyMonitor.chm
+legacy/ControlMyMonitor.cfg
+legacy/readme.txt
 legacy/lumina.log

@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Build output
+build/output/
+dist/
+*.spec.bak
+
+# Runtime
+*.log
+
+# Legacy binaries (kept on disk, not in history — 38 MB)
+LUMINA.exe
+ControlMyMonitor.exe
+ControlMyMonitor.chm
+ControlMyMonitor.cfg

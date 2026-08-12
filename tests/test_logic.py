@@ -123,6 +123,14 @@ class TestEdid:
         assert parse_edid_name(b"\x00" * 40) is None
 
 
+class TestAutostart:
+    def test_dev_entry_points_at_a_real_file(self):
+        # Off-by-one in parents[] here writes a Run key to a path that does
+        # not exist, and the failure only shows up at the next logon.
+        from lumina.features.autostart import dev_entry
+        assert dev_entry().is_file(), f"{dev_entry()} missing"
+
+
 class TestConfig:
     def test_roundtrip(self):
         cfg = Config(sync=True, fade_duration_ms=1500,

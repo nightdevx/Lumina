@@ -12,12 +12,16 @@ _RUN_KEY = r"Software\Microsoft\Windows\CurrentVersion\Run"
 _VALUE_NAME = "LUMINA"
 
 
+def dev_entry() -> Path:
+    """Project root launcher: src/lumina/features/autostart.py -> ../../../"""
+    return Path(__file__).resolve().parents[3] / "run_lumina.py"
+
+
 def _command() -> str:
     """--tray so a logon start goes straight to the notification area."""
     if getattr(sys, "frozen", False):
         return f'"{sys.executable}" --tray'
-    entry = Path(__file__).resolve().parents[2] / "run_lumina.py"
-    return f'"{sys.executable}" "{entry}" --tray'
+    return f'"{sys.executable}" "{dev_entry()}" --tray'
 
 
 def is_enabled() -> bool:

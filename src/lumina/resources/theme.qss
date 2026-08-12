@@ -1,0 +1,310 @@
+/* LUMINA theme. Every style lives here - v1 had ~100 inline setStyleSheet
+   calls, which made a single colour change a search-and-replace job. */
+
+QWidget {
+    background: transparent;
+    color: #ffffff;
+    font-family: "Segoe UI";
+    font-size: 11px;
+}
+
+#container {
+    background: #000000;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+}
+
+#popupContainer {
+    background: #000000;
+    border: 1px solid #222222;
+    border-radius: 12px;
+}
+
+/* ---------- sidebar ---------- */
+
+#sidebar {
+    background: #050505;
+    border-right: 1px solid #111111;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+#wordmark {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 4px;
+}
+
+#versionLabel {
+    color: #2a2a2a;
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+
+#navButton {
+    background: transparent;
+    color: #555555;
+    border: none;
+    border-left: 3px solid transparent;
+    text-align: left;
+    padding-left: 17px;
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+#navButton:hover   { color: #999999; }
+#navButton:checked { color: #ffffff; border-left: 3px solid #ffffff; }
+
+#quitButton {
+    background: transparent;
+    color: #333333;
+    border: none;
+    text-align: left;
+    padding: 16px 20px;
+    font-size: 8px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+#quitButton:hover { color: #e94560; }
+
+/* ---------- headings ---------- */
+
+#pageTitle {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#pageHint, #sectionHint {
+    color: #444444;
+    font-size: 9px;
+}
+
+#panelTitle {
+    color: #444444;
+    font-size: 8px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+/* ---------- monitor card ---------- */
+
+#card {
+    background: #080808;
+    border: 1px solid #151515;
+    border-radius: 8px;
+}
+#card:hover { border-color: #252525; }
+
+#card[disabledCard="true"] { background: #050505; border-color: #101010; }
+
+#cardName {
+    color: #666666;
+    font-size: 8px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#cardBadge {
+    color: #333333;
+    font-size: 8px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#cardValue {
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#cardWarning {
+    color: #e94560;
+    font-size: 8px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#emptyState {
+    color: #333333;
+    font-size: 10px;
+}
+
+/* ---------- slider ---------- */
+
+QSlider::groove:horizontal {
+    height: 2px;
+    background: #222222;
+    border-radius: 1px;
+}
+QSlider::sub-page:horizontal            { background: #ffffff; border-radius: 1px; }
+QSlider::sub-page:horizontal:disabled   { background: #333333; }
+QSlider::handle:horizontal {
+    width: 14px;
+    height: 14px;
+    margin: -6px 0;
+    background: #ffffff;
+    border-radius: 7px;
+}
+QSlider::handle:horizontal:hover    { background: #e94560; }
+QSlider::handle:horizontal:disabled { background: #2a2a2a; }
+
+/* ---------- buttons ---------- */
+
+/* Segoe MDL2 Assets ships with every Windows 10/11 install; plain Segoe UI
+   renders U+21BB and friends as tofu or as inconsistent glyph widths. */
+#iconButton {
+    background: transparent;
+    color: #444444;
+    border: 1px solid #1a1a1a;
+    border-radius: 14px;
+    font-family: "Segoe MDL2 Assets";
+    font-size: 12px;
+}
+#iconButton:hover    { color: #ffffff; border-color: #333333; }
+#iconButton:disabled { color: #222222; }
+
+#toggleButton {
+    background: transparent;
+    color: #444444;
+    border: 1px solid #222222;
+    border-radius: 4px;
+    font-family: "Segoe MDL2 Assets";
+    font-size: 11px;
+}
+#toggleButton:hover   { color: #999999; }
+#toggleButton:checked { color: #ffffff; border-color: #ffffff; background: #111111; }
+
+#primaryButton {
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    border-radius: 6px;
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+#primaryButton:hover    { background: #e0e0e0; }
+#primaryButton:disabled { background: #1a1a1a; color: #444444; }
+
+#ghostButton {
+    background: #080808;
+    color: #ffffff;
+    border: 1px solid #222222;
+    border-radius: 6px;
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+#ghostButton:hover { border-color: #444444; }
+
+#deleteButton {
+    background: #111111;
+    color: #e94560;
+    border: 1px solid #222222;
+    border-radius: 4px;
+    font-size: 8px;
+    font-weight: bold;
+}
+#deleteButton:hover { background: #1a0d12; border-color: #e94560; }
+
+/* ---------- schedule rule ---------- */
+
+#ruleCard {
+    background: #080808;
+    border: 1px solid #151515;
+    border-radius: 8px;
+}
+#ruleLabel {
+    color: #555555;
+    font-size: 8px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+QTimeEdit {
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid #222222;
+    border-radius: 4px;
+    padding: 4px 6px;
+    font-size: 11px;
+    selection-background-color: #e94560;
+}
+QTimeEdit:focus { border-color: #444444; }
+QTimeEdit::up-button, QTimeEdit::down-button { width: 0; border: none; }
+
+/* ---------- checkbox ---------- */
+
+QCheckBox {
+    color: #777777;
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    spacing: 10px;
+}
+QCheckBox:disabled { color: #333333; }
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border: 1px solid #222222;
+    background: #000000;
+    border-radius: 3px;
+}
+QCheckBox::indicator:hover   { border-color: #444444; }
+QCheckBox::indicator:checked { background: #ffffff; border-color: #ffffff; }
+
+/* ---------- status bar ---------- */
+
+#statusBar {
+    background: #e94560;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 12px;
+}
+#statusText {
+    color: #ffffff;
+    font-size: 8px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#syncBadge {
+    color: #e94560;
+    font-size: 8px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* ---------- scroll area ---------- */
+
+QScrollArea { border: none; background: transparent; }
+QScrollBar:vertical {
+    width: 4px;
+    background: transparent;
+    margin: 0;
+}
+QScrollBar::handle:vertical { background: #222222; border-radius: 2px; min-height: 24px; }
+QScrollBar::handle:vertical:hover { background: #333333; }
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0; }
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: transparent; }
+
+/* ---------- tray menu ---------- */
+
+QMenu {
+    background: #0a0a0a;
+    color: #dddddd;
+    border: 1px solid #222222;
+    padding: 4px;
+}
+QMenu::item { padding: 6px 24px 6px 14px; font-size: 10px; }
+QMenu::item:selected { background: #1a1a1a; color: #ffffff; }
+QMenu::separator { height: 1px; background: #1a1a1a; margin: 4px 8px; }
+
+QToolTip {
+    background: #0a0a0a;
+    color: #cccccc;
+    border: 1px solid #222222;
+    padding: 4px 6px;
+    font-size: 9px;
+}

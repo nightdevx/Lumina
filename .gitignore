@@ -2,19 +2,18 @@
 __pycache__/
 *.py[cod]
 .venv/
-venv/
+.pytest_cache/
 *.egg-info/
 
 # Build output
 build/output/
-dist/
-*.spec.bak
+preview/
 
 # Runtime
 *.log
 
-# Legacy binaries (kept on disk, not in history — 38 MB)
-LUMINA.exe
-ControlMyMonitor.exe
-ControlMyMonitor.chm
-ControlMyMonitor.cfg
+# Legacy binaries kept on disk for reference, not in history (38 MB + NirSoft)
+legacy/LUMINA.exe
+legacy/ControlMyMonitor.exe
+legacy/ControlMyMonitor.chm
+legacy/lumina.log

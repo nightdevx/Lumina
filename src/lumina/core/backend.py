@@ -10,7 +10,7 @@ import logging
 from dataclasses import dataclass, replace
 
 from . import ddcci
-from .discovery import DisplayInfo, enumerate_displays
+from .discovery import DisplayInfo, enumerate_displays, topology_signature
 from .panel import PanelBackend
 
 log = logging.getLogger(__name__)
@@ -53,14 +53,27 @@ class MonitorBackend:
         self._handles: dict[str, list[ddcci.PhysicalMonitor]] = {}
         self._panel_instances: dict[str, str] = {}   # key -> WMI InstanceName
         self._monitors: list[Monitor] = []
+        self._signature: tuple = ()
 
     @property
     def monitors(self) -> list[Monitor]:
         return list(self._monitors)
 
+    def topology_changed(self) -> bool:
+        """True when the displays no longer match what the last scan saw.
+
+        A scan is only as good as the moment it ran. Windows brings displays up
+        in steps (logon, docking, a monitor waking), and a step that adds no Qt
+        screen, such as a monitor device attaching to an output that already
+        exists, used to leave a monitor missing until a manual rescan."""
+        return topology_signature() != self._signature
+
     def refresh(self) -> list[Monitor]:
         """Re-enumerate from scratch. Must run after any display change —
         HMONITOR values and physical monitor handles both go stale."""
+        # Taken before enumerating: a change during the scan then shows up as
+        # a mismatch on the next poll instead of being baked into the result.
+        self._signature = topology_signature()
         self._release_handles()
         panels = {p.identity: p for p in self._panel.list_panels()}
         self._panel_instances = {p.identity: p.instance_name for p in panels.values()}
@@ -136,11 +149,26 @@ class MonitorBackend:
         instance = self._panel_instances.get(key)
         if instance is not None:
             return self._panel.set_percent(instance, percent)
-        handles = self._handles.get(key)
-        if not handles:
-            return False
         # Mirrored outputs share one HMONITOR; write every handle behind it.
-        return all(handle.set_percent(percent) for handle in handles)
+        handles = self._handles.get(key)
+        if handles and all(handle.set_percent(percent) for handle in handles):
+            return True
+        # A display mode change (resolution, HDR, a monitor waking) destroys
+        # the handles without adding or removing a screen, and every write then
+        # fails with ERROR_GRAPHICS_MONITOR_NO_LONGER_EXISTS. Re-acquire, retry.
+        handles = self._reopen(key)
+        return bool(handles) and all(handle.set_percent(percent) for handle in handles)
+
+    def _reopen(self, key: str) -> list[ddcci.PhysicalMonitor]:
+        for handle in self._handles.pop(key, ()):
+            handle.close()
+        for display in enumerate_displays():
+            if display.identity == key:
+                handles = ddcci.open_physical_monitors(display.hmonitor)
+                if handles:
+                    self._handles[key] = handles
+                return handles
+        return []
 
     def _release_handles(self) -> None:
         for handles in self._handles.values():

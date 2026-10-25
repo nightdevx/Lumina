@@ -33,6 +33,9 @@ class FakeBackend:
     def read_all(self):
         return self.refresh()
 
+    def topology_changed(self):
+        return False
+
     def set_percent(self, key, percent):
         time.sleep(BUS_DELAY)
         with self.lock:

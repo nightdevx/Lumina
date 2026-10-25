@@ -128,7 +128,7 @@ Runtime cost: **927 ms** cold start, **413 ms** warm, **0.00 %** CPU while idle,
 | Display enumeration | `EnumDisplayMonitors` + `EnumDisplayDevices` |
 | Monitor names | EDID descriptor `0xFC` from the registry, so a card reads `LG HDR WFHD` rather than `Generic PnP Monitor` |
 | Internal vs external | The device interface path and the WMI `InstanceName` both contain the PNP id and hardware instance; normalising them makes the match exact rather than a guess |
-| Hotplug | Qt `screenAdded` / `screenRemoved` |
+| Hotplug | The worker polls a cheap display fingerprint every 2 s while idle and rescans when it changes; a failed DDC/CI write re-acquires that monitor's handles and retries |
 
 Everything below the UI runs on one worker thread, which is also where the COM
 apartment and the DDC/CI handles live. The GUI thread never blocks on a bus

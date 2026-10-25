@@ -22,6 +22,10 @@ log = logging.getLogger(__name__)
 _REFRESH = "refresh"
 _READ = "read"
 
+# Qt's screenAdded/screenRemoved missed display changes that add no screen,
+# so the worker watches the display set itself while idle.
+TOPOLOGY_POLL_SECONDS = 2.0
+
 
 class BrightnessService(QThread):
     monitorsChanged = Signal(list)   # list[Monitor] - topology changed
@@ -74,10 +78,12 @@ class BrightnessService(QThread):
         try:
             self._scan(backend)
             while not self._stopping:
-                self._wake.wait(timeout=0.5)
+                woke = self._wake.wait(timeout=TOPOLOGY_POLL_SECONDS)
                 self._wake.clear()
                 if self._stopping:
                     break
+                if not woke and backend.topology_changed():
+                    self._scan(backend)
                 self._drain(backend)
         except Exception as exc:
             log.exception("Backend thread crashed")

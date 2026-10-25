@@ -128,7 +128,7 @@ Kendi donanımında ölç:
 | Ekran listeleme | `EnumDisplayMonitors` + `EnumDisplayDevices` |
 | Monitör isimleri | Registry'deki EDID `0xFC` tanımlayıcısı — kartta `Generic PnP Monitor` değil `LG HDR WFHD` yazar |
 | Dahili/harici ayrımı | Cihaz arayüz yolu ve WMI `InstanceName`, ikisi de PNP kimliği ve donanım örneğini taşır; normalize edilince eşleşme tahmin değil kesin olur |
-| Tak/çıkar | Qt `screenAdded` / `screenRemoved` |
+| Tak/çıkar | Worker boştayken 2 saniyede bir ucuz bir ekran parmak izine bakar, değişince yeniden tarar; başarısız bir DDC/CI yazımı o monitörün handle'larını yeniden alıp tekrar dener |
 
 UI'nin altındaki her şey tek bir worker thread'de çalışır; COM apartmanı ve
 DDC/CI handle'ları da orada yaşar. GUI thread'i hiçbir zaman veri yolu

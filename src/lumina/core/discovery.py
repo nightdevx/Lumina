@@ -155,28 +155,49 @@ def _monitor_handles() -> list[int]:
     return handles
 
 
+def _describe(hmonitor: int) -> tuple[MONITORINFOEXW, DISPLAY_DEVICEW, str] | None:
+    """(monitor info, monitor device, device id), or None while Windows has the
+    HMONITOR but no monitor device behind it yet - at logon, while a dock
+    comes up or while a monitor wakes."""
+    info = MONITORINFOEXW()
+    info.cbSize = ctypes.sizeof(MONITORINFOEXW)
+    if not _user32.GetMonitorInfoW(hmonitor, ctypes.byref(info)):
+        return None
+
+    device = DISPLAY_DEVICEW()
+    device.cb = ctypes.sizeof(DISPLAY_DEVICEW)
+    if not _user32.EnumDisplayDevicesW(info.szDevice, 0, ctypes.byref(device), 0):
+        return None
+
+    # Second pass with the interface flag: DeviceID then carries the
+    # instance id we need for both the EDID lookup and the WMI match.
+    iface = DISPLAY_DEVICEW()
+    iface.cb = ctypes.sizeof(DISPLAY_DEVICEW)
+    _user32.EnumDisplayDevicesW(info.szDevice, 0, ctypes.byref(iface),
+                                EDD_GET_DEVICE_INTERFACE_NAME)
+    return info, device, iface.DeviceID or device.DeviceID
+
+
+def topology_signature() -> tuple:
+    """What enumerate_displays would find, without the EDID reads. Well under
+    a millisecond, so it is cheap enough to poll."""
+    signature = []
+    for hmonitor in _monitor_handles():
+        described = _describe(hmonitor)
+        signature.append((hmonitor, described[2] if described else None))
+    return tuple(signature)
+
+
 def enumerate_displays() -> list[DisplayInfo]:
     displays: list[DisplayInfo] = []
     for hmonitor in _monitor_handles():
-        info = MONITORINFOEXW()
-        info.cbSize = ctypes.sizeof(MONITORINFOEXW)
-        if not _user32.GetMonitorInfoW(hmonitor, ctypes.byref(info)):
+        described = _describe(hmonitor)
+        if described is None:
+            log.info("Display %s has no monitor device yet; skipped", hmonitor)
             continue
+        info, device, device_id = described
 
-        device = DISPLAY_DEVICEW()
-        device.cb = ctypes.sizeof(DISPLAY_DEVICEW)
-        if not _user32.EnumDisplayDevicesW(info.szDevice, 0, ctypes.byref(device), 0):
-            continue
-        device_name, device_string = device.DeviceName, device.DeviceString
-
-        # Second pass with the interface flag: DeviceID then carries the
-        # instance id we need for both the EDID lookup and the WMI match.
-        iface = DISPLAY_DEVICEW()
-        iface.cb = ctypes.sizeof(DISPLAY_DEVICEW)
-        _user32.EnumDisplayDevicesW(info.szDevice, 0, ctypes.byref(iface),
-                                    EDD_GET_DEVICE_INTERFACE_NAME)
-
-        identity = normalize_identity(iface.DeviceID or device.DeviceID)
+        identity = normalize_identity(device_id)
         parts = identity.split("#")
         pnp_id = parts[1] if len(parts) > 1 else ""
         instance_id = parts[2] if len(parts) > 2 else ""
@@ -184,8 +205,8 @@ def enumerate_displays() -> list[DisplayInfo]:
         displays.append(DisplayInfo(
             hmonitor=hmonitor,
             adapter=info.szDevice,
-            device_name=device_name,
-            device_string=device_string,
+            device_name=device.DeviceName,
+            device_string=device.DeviceString,
             identity=identity,
             pnp_id=pnp_id,
             instance_id=instance_id,

@@ -4,7 +4,7 @@
 ; %LOCALAPPDATA%\Programs\Lumina and the uninstall entry is per-user too.
 
 #define AppName "LUMINA"
-#define AppVersion "2.0.0"
+#define AppVersion "2.0.1"
 #define AppPublisher "Lumina"
 #define AppExeName "LUMINA.exe"
 

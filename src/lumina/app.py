@@ -9,7 +9,7 @@ import logging
 import time
 
 from PySide6.QtCore import QObject, QTimer, Qt
-from PySide6.QtGui import QAction, QGuiApplication, QIcon, QPainter, QPixmap
+from PySide6.QtGui import QAction, QIcon, QPainter, QPixmap
 from PySide6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
 from . import __version__, config as config_module
@@ -27,7 +27,6 @@ log = logging.getLogger(__name__)
 # A scan result must not yank a slider the user is still moving.
 WRITE_GRACE_SECONDS = 0.6
 SAVE_DEBOUNCE_MS = 500
-HOTPLUG_SETTLE_MS = 900
 
 
 class LuminaApp(QObject):
@@ -48,11 +47,6 @@ class LuminaApp(QObject):
         self._save_timer.setSingleShot(True)
         self._save_timer.setInterval(SAVE_DEBOUNCE_MS)
         self._save_timer.timeout.connect(self._save_now)
-
-        self._hotplug_timer = QTimer(self)
-        self._hotplug_timer.setSingleShot(True)
-        self._hotplug_timer.setInterval(HOTPLUG_SETTLE_MS)
-        self._hotplug_timer.timeout.connect(self.service.request_refresh)
 
         self.fade = FadeController(self)
         self.schedules = ScheduleController(lambda: self.config.schedules, self)
@@ -133,10 +127,6 @@ class LuminaApp(QObject):
 
         self.schedules.triggered.connect(self._apply_schedule)
         self.fade.stepped.connect(self._apply_values)
-
-        screens = QGuiApplication.instance()
-        screens.screenAdded.connect(lambda _: self._hotplug_timer.start())
-        screens.screenRemoved.connect(lambda _: self._hotplug_timer.start())
 
         self.app.aboutToQuit.connect(self._teardown)
 

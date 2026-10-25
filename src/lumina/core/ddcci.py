@@ -2,7 +2,7 @@
 
 Replaces the ControlMyMonitor.exe subprocess: a read went from ~7.8 s to ~60 ms.
 Handles are expensive relative to a single call, so callers keep them open for
-the lifetime of a display configuration and re-acquire on WM_DISPLAYCHANGE.
+the lifetime of a display configuration and re-acquire when a write fails.
 """
 from __future__ import annotations
 

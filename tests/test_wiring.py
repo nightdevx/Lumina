@@ -40,6 +40,9 @@ class FakeBackend:
     def read_all(self):
         return list(MONITORS)
 
+    def topology_changed(self):
+        return False
+
     def set_percent(self, key, percent):
         with self.lock:
             self.writes.append((key, percent))
